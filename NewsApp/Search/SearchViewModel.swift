@@ -8,12 +8,30 @@
 import Foundation
 
 class SearchViewModel {
-    var items = [SearchDoc]()
+    
+    var item : Search?
+
+    var search = [SearchDoc]()
     
     var successCallback: (()->())?
     
     func searchText(text: String) {
-        APICaller.shared.getSearchItems(text: text) { result in
+          SearchManager.shared.getSearchItems(text: text) { searchData, error in
+              if let error = error {
+                  print( error)
+              } else if let searchData = searchData {
+                  self.search = searchData.response?.docs ?? []
+                  self.successCallback?()
+              }
+          }
+    }
+    func resetDatas() {
+        item = nil
+        search.removeAll()
+    }
+}
+           
+        /*APICaller.shared.getSearchItems(text: text) { result in
             switch result {
             case .success(let data):
                 self.items = data.response?.docs ?? []
@@ -21,6 +39,5 @@ class SearchViewModel {
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
-        }
-    }
-}
+         }*/
+ 

@@ -7,15 +7,15 @@
 
 import Foundation
 
-class APICaller {
-    static let shared = APICaller()
-    
-    struct Constants {
-        static let topHeadlinesURL = URL(string: "https://newsapi.org/v2/top-headlines?country=US&apiKey=Nxs16JgGZBFSHPAxaD6CH6K7oOmHkwO9")
-    }
-    private init() {}
-    
-    public func getTopStories(completion: @escaping(Result<[Article], Error>) -> Void) {
+//class APICaller {
+//    static let shared = APICaller()
+//    
+//    struct Constants {
+//        static let topHeadlinesURL = URL(string: "https://newsapi.org/v2/top-headlines?country=US&apiKey=Nxs16JgGZBFSHPAxaD6CH6K7oOmHkwO9")
+//    }
+//    private init() {}
+//    
+    /*public func getTopStories(completion: @escaping(Result<[Article], Error>) -> Void) {
         guard let url = Constants.topHeadlinesURL else {
             return
         }
@@ -56,7 +56,7 @@ class APICaller {
             }
         }
         task.resume()
-    }
-}
+    }*/
+//}
 
 

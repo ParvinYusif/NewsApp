@@ -7,50 +7,68 @@
 
 import UIKit
 
-class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSource {
-    
+class SearchController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+  
     @IBOutlet weak var textfield: UITextField!
-    @IBOutlet weak var tableView: UITableView!
 
-    var data = [String]()
-    var filteredData = [String]()
+    @IBOutlet weak var collection: UICollectionView!
+    
+//    var data = [String]()
+//    var filteredData = [String]()
     
     let viewModel = SearchViewModel()
     
+    private let cellId = "\(SearchCell.self)"
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Search"
+
 //        tableView.dataSource = self
 //        tableView.delegate = self
         configureViewModel()
+        configreUI()
+        
+        viewModel.successCallback = {
+                    self.collection.reloadData()
+                }
     }
     
+    func configreUI() {
+        collection.register(UINib(nibName: cellId, bundle: nil), forCellWithReuseIdentifier: cellId)
+    }
     func configureViewModel() {
         viewModel.successCallback = {
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.collection.reloadData()
             }
         }
     }
     
     @IBAction func textFieldTyping(_ sender: Any) {
         if let text = textfield.text, !text.isEmpty {
-            viewModel.searchText(text: text)
+            viewModel.searchText(text: textfield.text ?? "")
         } else {
-            viewModel.items.removeAll()
-            tableView.reloadData()
+            viewModel.search.removeAll()
+            collection.reloadData()
         }
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.items.count
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        viewModel.search.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        UITableViewCell()
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SearchCell
+        cell.configure(data: viewModel.search[indexPath.item])
+        return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: collection.frame.width , height: 150)
+
+//        .init(width: collection.frame.width, height: 250)
     }
 }
+

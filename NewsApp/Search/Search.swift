@@ -19,7 +19,24 @@ struct SearchResponse: Codable {
 }
 
 // MARK: - SearchDoc
-struct SearchDoc: Codable {
+struct SearchDoc: Codable, SearchProtocol {
+    
+    var labeltext: String {
+        abstract ?? ""
+    }
+        
+        var timetext: String {
+            pubDate ?? ""
+        }
+        
+        var imageUrl: String {
+            if let multimedia = multimedia, let url = multimedia.first?.url {
+                return "https://static01.nyt.com/" + url
+            } else {
+                return ""
+            }
+        }
+    
     let abstract: String?
     let webURL: String?
     let snippet, leadParagraph: String?
